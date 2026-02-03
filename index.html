@@ -24,17 +24,18 @@ body {
 
 .container {
     text-align: center;
-    padding: 40px;
+    padding: 32px 24px;
     background: rgba(255,255,255,0.95);
-    border-radius: 30px;
+    border-radius: 28px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    max-width: 500px;
-    width: 90%;
+    max-width: 480px;
+    width: 92%;
+    position: relative;
 }
 
 .heart {
-    font-size: 3em;
-    margin: 20px 0;
+    font-size: 2.6em;
+    margin: 16px 0;
     animation: heartbeat 1.5s infinite;
 }
 
@@ -45,46 +46,62 @@ body {
 }
 
 h1 {
-    font-size: 2.5em;
+    font-size: 2.2em;
     color: #333;
 }
 
 .question {
-    font-size: 1.8em;
+    font-size: 1.5em;
     color: #555;
-    margin: 15px 0;
+    margin: 14px 0;
 }
 
 .signature {
-    font-size: 1em;
+    font-size: 0.95em;
     color: #ff6b9d;
     font-style: italic;
-    margin-bottom: 35px;
+    margin-bottom: 26px;
 }
 
 .buttons-container {
     position: relative;
-    height: 200px;
+    height: 180px;
 }
 
 button {
-    padding: 20px 50px;
-    font-size: 1.5em;
+    padding: 14px 32px;
+    font-size: 1.2em;
     font-weight: bold;
     border: none;
-    border-radius: 15px;
+    border-radius: 14px;
     cursor: pointer;
 }
 
 .yes-btn {
     background: linear-gradient(#ff6b9d, #ff4979);
     color: white;
+    z-index: 2;
 }
 
 .no-btn {
     position: absolute;
     background: linear-gradient(#e8e8e8, #c0c0c0);
     color: #666;
+    pointer-events: none;
+    transition: left 0.25s ease, top 0.25s ease;
+}
+
+.tooltip {
+    position: absolute;
+    background: #ff6b9d;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .success-screen {
@@ -92,23 +109,34 @@ button {
 }
 
 .celebration {
-    font-size: 3em;
+    font-size: 2.6em;
 }
 
 .success-message {
-    font-size: 2em;
+    font-size: 1.6em;
     color: #ff6b9d;
 }
 
 .love-message {
-    font-size: 1.5em;
+    font-size: 1.3em;
 }
 
 .celebration-gif {
-    width: 300px;
+    width: 260px;
     max-width: 90%;
     border-radius: 15px;
-    margin: 20px auto;
+    margin: 18px auto;
+}
+
+/* Extra safety for very small phones */
+@media (max-width: 360px) {
+    button {
+        padding: 12px 26px;
+        font-size: 1.1em;
+    }
+    .question {
+        font-size: 1.4em;
+    }
 }
 </style>
 </head>
@@ -126,9 +154,8 @@ button {
 
     <div class="buttons-container" id="buttonsContainer">
         <button class="yes-btn" onclick="sayYes()">YES</button>
-        <button class="no-btn" id="noBtn"
-            onmouseover="moveNoButton()"
-            ontouchmove="moveNoButton()">NO</button>
+        <button class="no-btn" id="noBtn">NO</button>
+        <div class="tooltip" id="tooltip">Nice try 😜</div>
     </div>
 </div>
 
@@ -136,8 +163,8 @@ button {
 <div class="success-screen" id="successScreen">
     <div class="celebration">💕 YAY!!! 💕</div>
     <p class="success-message">Best decision ever 😘</p>
-    <img src="celebration.gif" class="celebration-gif">
-    <p class="love-message">I love you Bebelu💗</p>
+    <img src="celebration.gif" class="celebration-gif" alt="celebration">
+    <p class="love-message">I love you Bebelu 💗</p>
 </div>
 
 </div>
@@ -145,8 +172,13 @@ button {
 <script>
 const noBtn = document.getElementById("noBtn");
 const container = document.getElementById("buttonsContainer");
+const tooltip = document.getElementById("tooltip");
+
+let attempts = 0;
 
 function moveNoButton() {
+    attempts++;
+
     const rect = container.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
@@ -158,11 +190,29 @@ function moveNoButton() {
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
+
+    tooltip.style.left = (x + btnRect.width / 2 - 36) + "px";
+    tooltip.style.top = (y - 32) + "px";
+
+    tooltip.style.opacity = "1";
+    tooltip.style.transform = "scale(1)";
+
+    noBtn.style.transitionDuration =
+        Math.max(0.12, 0.3 - attempts * 0.03) + "s";
+
+    setTimeout(() => {
+        tooltip.style.opacity = "0";
+        tooltip.style.transform = "scale(0.9)";
+    }, 800);
 }
 
-// initial position
+// Escape on approach
+container.addEventListener("mousemove", moveNoButton);
+container.addEventListener("touchmove", moveNoButton);
+
+// Initial position
 window.onload = () => {
-    noBtn.style.left = "60%";
+    noBtn.style.left = "58%";
     noBtn.style.top = "50%";
 };
 
