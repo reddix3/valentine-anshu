@@ -6,11 +6,7 @@
 <title>A Special Question 💕</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: Arial, sans-serif;
@@ -33,40 +29,18 @@ body {
     position: relative;
 }
 
-.heart {
-    font-size: 2.6em;
-    margin: 16px 0;
-    animation: heartbeat 1.5s infinite;
-}
-
+.heart { font-size: 2.6em; margin: 16px 0; animation: heartbeat 1.5s infinite; }
 @keyframes heartbeat {
-    0%,100% { transform: scale(1); }
-    10%,30% { transform: scale(1.1); }
-    20%,40% { transform: scale(1); }
+    0%,100%{transform:scale(1);}
+    10%,30%{transform:scale(1.1);}
+    20%,40%{transform:scale(1);}
 }
 
-h1 {
-    font-size: 2.2em;
-    color: #333;
-}
+h1 { font-size: 2.2em; }
+.question { font-size: 1.5em; margin: 14px 0; }
+.signature { font-size: .95em; color:#ff6b9d; font-style:italic; margin-bottom:26px; }
 
-.question {
-    font-size: 1.5em;
-    color: #555;
-    margin: 14px 0;
-}
-
-.signature {
-    font-size: 0.95em;
-    color: #ff6b9d;
-    font-style: italic;
-    margin-bottom: 26px;
-}
-
-.buttons-container {
-    position: relative;
-    height: 180px;
-}
+.buttons-container { position: relative; height: 180px; }
 
 button {
     padding: 14px 32px;
@@ -80,77 +54,83 @@ button {
 .yes-btn {
     background: linear-gradient(#ff6b9d, #ff4979);
     color: white;
-    z-index: 2;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✨ Sparkle effect */
+.yes-btn::after {
+    content:'';
+    position:absolute;
+    inset:-50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 10%, transparent 40%);
+    opacity:0;
+    animation:sparkle 1s infinite;
+}
+.yes-btn:hover::after { opacity:1; }
+@keyframes sparkle {
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
 }
 
 .no-btn {
-    position: absolute;
+    position:absolute;
     background: linear-gradient(#e8e8e8, #c0c0c0);
-    color: #666;
-    pointer-events: none;
-    transition: left 0.25s ease, top 0.25s ease;
+    color:#666;
+    pointer-events:none;
+    transition:left .25s ease, top .25s ease;
 }
 
 .tooltip {
-    position: absolute;
-    background: #ff6b9d;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.85em;
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.9);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    position:absolute;
+    background:#ff6b9d;
+    color:white;
+    padding:5px 10px;
+    border-radius:12px;
+    font-size:.85em;
+    opacity:0;
+    transform:scale(.9);
+    transition:.2s;
 }
 
-.success-screen {
-    display: none;
-}
-
-.celebration {
-    font-size: 2.6em;
-}
-
-.success-message {
-    font-size: 1.6em;
-    color: #ff6b9d;
-}
-
-.love-message {
-    font-size: 1.3em;
-}
+.success-screen { display:none; }
+.celebration { font-size:2.6em; }
+.success-message { font-size:1.6em; color:#ff6b9d; }
+.love-message { font-size:1.3em; }
 
 .celebration-gif {
-    width: 260px;
-    max-width: 90%;
-    border-radius: 15px;
-    margin: 18px auto;
+    width:260px;
+    max-width:90%;
+    border-radius:15px;
+    margin:18px auto;
 }
 
-/* Extra safety for very small phones */
-@media (max-width: 360px) {
-    button {
-        padding: 12px 26px;
-        font-size: 1.1em;
-    }
-    .question {
-        font-size: 1.4em;
-    }
+/* 💓 floating hearts */
+.floating-heart {
+    position: fixed;
+    font-size: 24px;
+    animation: floatUp 3s ease-out forwards;
+}
+@keyframes floatUp {
+    from { transform: translateY(0); opacity:1; }
+    to { transform: translateY(-120px); opacity:0; }
 }
 </style>
 </head>
 
 <body>
 
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
 
-<!-- Question Screen -->
 <div id="questionScreen">
     <div class="heart">💖</div>
     <h1>Bebelu,</h1>
     <p class="question">Will you be my Valentine? ❤️</p>
-    <p class="signature">Built just for you by Bebelu 💗</p>
+    <p class="signature">Built This just for you by Bebelu🫂💗</p>
 
     <div class="buttons-container" id="buttonsContainer">
         <button class="yes-btn" onclick="sayYes()">YES</button>
@@ -159,12 +139,11 @@ button {
     </div>
 </div>
 
-<!-- Success Screen -->
 <div class="success-screen" id="successScreen">
     <div class="celebration">💕 YAY!!! 💕</div>
     <p class="success-message">Best decision ever 😘</p>
-    <img src="celebration.gif" class="celebration-gif" alt="celebration">
-    <p class="love-message">I love you Bebelu 💗</p>
+    <img src="celebration.gif" class="celebration-gif">
+    <p class="love-message">I love you Bangaram💗</p>
 </div>
 
 </div>
@@ -173,52 +152,51 @@ button {
 const noBtn = document.getElementById("noBtn");
 const container = document.getElementById("buttonsContainer");
 const tooltip = document.getElementById("tooltip");
+const music = document.getElementById("bgMusic");
 
+const tooltips = ["Nice try 😜","Almost 😆","Nope 😘","Hehe 💕","Caught you 😏"];
 let attempts = 0;
 
 function moveNoButton() {
     attempts++;
+    const r = container.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
+    const x = Math.random()*(r.width-b.width);
+    const y = Math.random()*(r.height-b.height);
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
 
-    const rect = container.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
+    tooltip.textContent = tooltips[Math.floor(Math.random()*tooltips.length)];
+    tooltip.style.left=(x+b.width/2-36)+"px";
+    tooltip.style.top=(y-30)+"px";
+    tooltip.style.opacity=1;
+    tooltip.style.transform="scale(1)";
 
-    const maxX = rect.width - btnRect.width;
-    const maxY = rect.height - btnRect.height;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-
-    tooltip.style.left = (x + btnRect.width / 2 - 36) + "px";
-    tooltip.style.top = (y - 32) + "px";
-
-    tooltip.style.opacity = "1";
-    tooltip.style.transform = "scale(1)";
-
-    noBtn.style.transitionDuration =
-        Math.max(0.12, 0.3 - attempts * 0.03) + "s";
-
-    setTimeout(() => {
-        tooltip.style.opacity = "0";
-        tooltip.style.transform = "scale(0.9)";
-    }, 800);
+    setTimeout(()=>tooltip.style.opacity=0,800);
 }
 
-// Escape on approach
 container.addEventListener("mousemove", moveNoButton);
 container.addEventListener("touchmove", moveNoButton);
 
-// Initial position
-window.onload = () => {
-    noBtn.style.left = "58%";
-    noBtn.style.top = "50%";
-};
+window.onload=()=>{ noBtn.style.left="58%"; noBtn.style.top="50%"; }
 
 function sayYes() {
-    document.getElementById("questionScreen").style.display = "none";
-    document.getElementById("successScreen").style.display = "block";
+    document.getElementById("questionScreen").style.display="none";
+    document.getElementById("successScreen").style.display="block";
+
+    if (navigator.vibrate) navigator.vibrate(200);
+
+    music.play().catch(()=>{});
+
+    for(let i=0;i<15;i++){
+        const h=document.createElement("div");
+        h.className="floating-heart";
+        h.textContent="💗";
+        h.style.left=Math.random()*100+"%";
+        h.style.bottom="20px";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),3000);
+    }
 }
 </script>
 
